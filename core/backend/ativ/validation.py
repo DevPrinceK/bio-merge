@@ -18,7 +18,7 @@ class Validator():
             expected_data_type = expected_data_types[column]
             return df[column].dtype == expected_data_type
         else:
-            return True
+            return False
 
 
     def validate(self, dataframe):

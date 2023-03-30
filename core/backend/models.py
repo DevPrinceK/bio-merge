@@ -71,8 +71,8 @@ class ProteinStructure(models.Model):
 class ProteinInteraction(models.Model):
     '''schema for the protein interaction table'''
     interaction_id = models.AutoField(primary_key=True, unique=True)
-    protein_id1 = models.ForeignKey(Protein, on_delete=models.CASCADE, null=True)  # noqa
-    protein_id2 = models.ForeignKey(Protein, on_delete=models.CASCADE, null=True)  # noqa
+    protein_id1 = models.ForeignKey(Protein, on_delete=models.CASCADE, null=True, related_name='first_protein')  # noqa
+    protein_id2 = models.ForeignKey(Protein, on_delete=models.CASCADE, null=True, related_name='second_protein')  # noqa
     interaction_type = models.CharField(max_length=500, null=True, blank=True)
     confidence_score = models.FloatField()
     data_source = models.CharField(max_length=500, null=True, blank=True)
