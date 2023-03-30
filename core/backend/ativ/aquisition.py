@@ -24,18 +24,20 @@ class GetData():
         base = "https://data.rcsb.org/rest/v1/core/entry/"
         url = f"{base}/{pdb_id}"
         response = requests.get(url)
-        if response.status_code == 200:
-            data = response.json()
-            return data
+        # print(response)
+        return response.json()
+        # if response.status_code == 200:
+        #     data = response.json()
+        #     return data
 
-            # Extract the metadata
-            # structure_id = data["id"]
-            # structure_title = data["rcsb_entry_info"]["title"]
-            # structure_resolution = data["rcsb_entry_info"]["resolution_combined"]
-            # num_atoms = data["rcsb_entry_info"]["polymer_entity_count"]["atom"]
-        else:
-            print(f"Request failed with status code {response.status_code}")
-            return None
+        #     # Extract the metadata
+        #     # structure_id = data["id"]
+        #     # structure_title = data["rcsb_entry_info"]["title"]
+        #     # structure_resolution = data["rcsb_entry_info"]["resolution_combined"]
+        #     # num_atoms = data["rcsb_entry_info"]["polymer_entity_count"]["atom"]
+        # else:
+        #     print(f"Request failed with status code {response.status_code}")
+        #     return None
 
     def from_refseq(self):
         pass
