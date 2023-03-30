@@ -23,7 +23,8 @@ class GetData():
     def from_pdb(self, pdb_id):
         base = "https://data.rcsb.org/rest/v1/core/entry/"
         url = f"{base}/{pdb_id}"
-        response = requests.get(url)
+        sample_url = "https://data.rcsb.org/rest/v1/core/entry/1a0a"
+        response = requests.get(sample_url)
         # print(response)
         return response.json()
         # if response.status_code == 200:
