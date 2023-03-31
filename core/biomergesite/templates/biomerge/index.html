@@ -1,0 +1,33 @@
+{% extends 'biomerge/base.html' %}
+
+{% block content %}
+<div class="page container">
+  <div class="page-inner">
+    <header class="page-title-bar">
+      <h1 class="page-title"> Update DB</h1>
+    </header>
+    <div class="page-section">
+      <!-- .section-block -->
+      <div class="section-block">
+        <!-- page content goes here -->
+        <form class="mb-5">
+          <div class="form-group">
+            <label for="tf3">Upload</label>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="tf3" multiple=""> <label class="custom-file-label"
+                for="tf3">Choose file</label>
+            </div>
+          </div>
+        </form>
+      </div><!-- /.section-block -->
+
+      <!-- .section-block -->
+      <div class="section-block">
+        <!-- page content goes here -->
+        <p> Database </p>
+      </div><!-- /.section-block -->
+
+    </div><!-- /.page-section -->
+  </div><!-- /.page-inner -->
+</div><!-- /.page -->
+{% endblock %}
