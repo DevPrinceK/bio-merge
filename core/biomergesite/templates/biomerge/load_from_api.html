@@ -10,7 +10,7 @@
       <div class="section-block">
         <div class="container card">
           <div class="container card-body">
-            <form action="" enctype="multipart/form-data">
+            <form action="{% url 'biomerge:api_results' %}">
               <div class="container">
                 <p class="card-text">
                   <h1>Load Data From API</h1>
@@ -19,16 +19,17 @@
               <div class="container">
                 <div class="col-8">
                   <div class="input-group mb-3">
-                    <input type="text" class="form-control" id="basic-url" placeholder="Accession ID, Sequence ID, etc"
-                      aria-describedby="basic-addon3">
+                    <input type="text" class="form-control" id="basic-url" name="query"
+                      placeholder="Accession ID, Sequence ID, etc" aria-describedby="basic-addon3">
                   </div>
                 </div>
                 <div class="col-8">
                   <div class="input-group mb-3">
-                    <select class="form-control" name="" id="">
+                    <select class="form-control" name="db_name" id="">
                       <option value="">---Select API---</option>
                       <option value="genbank">GENBANK</option>
-                      <option value="uniprot">UNIPROT</option>
+                      <option value="pubmed">PUBMED</option>
+                      <option value="ncbi">NCBI</option>
                       <option value="ncbi">NCBI</option>
                     </select>
                   </div>

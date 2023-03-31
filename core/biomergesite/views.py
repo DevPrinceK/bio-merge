@@ -40,8 +40,9 @@ class LoadDataView(View):
 class APIResultsView(View):
     template_name = 'biomerge/api_results.html'
 
-    def get(self, requests, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         query = request.GET.get('query') or 'U12345'
+        db_name = request.GET.get('db_name') or 'genbank'
         get_data = GetData()
         record = get_data.from_genbank(query)
         if record is not None:
@@ -52,18 +53,27 @@ class APIResultsView(View):
             taxonomy = '; '.join(record.annotations['taxonomy'])
             references = '\n'.join([str(ref)
                                    for ref in record.annotations['references']])
+            try:
+                genbank_record = GenBankRecord(
+                    accession_id=record.id,
+                    organism=record.annotations['organism'],
+                    sequence_length=len(record.seq),
+                    molecule_type=molecule_type,
+                    source=source,
+                    taxonomy=taxonomy,
+                    references=references,
+                    sequence_data=str(record.seq)
+                )
+                genbank_record.save()
+            except Exception as e:
+                print(e)
+                print('Error saving record to database')
+                results_message = f'Error saving record ({record.id}) to database'
+            else:
+                print('Record saved to database')
+                results_message = f'Record ({record.id}) saved to database'
 
-            genbank_record = GenBankRecord(
-                accession_id=record.id,
-                organism=record.annotations['organism'],
-                sequence_length=len(record.seq),
-                molecule_type=molecule_type,
-                source=source,
-                taxonomy=taxonomy,
-                references=references,
-                sequence_data=str(record.seq)
-            )
-            genbank_record.save()
-
-        context = {}
-        return render(requests, self.template_name, context)
+        context = {
+            'results_message': results_message
+        }
+        return render(request, self.template_name, context)

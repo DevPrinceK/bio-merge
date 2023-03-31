@@ -2,7 +2,7 @@ from django.db import models
 
 
 class GenBankRecord(models.Model):
-    accession_id = models.CharField(max_length=100)
+    accession_id = models.CharField(max_length=100, unique=True)
     organism = models.CharField(max_length=100)
     sequence_length = models.IntegerField()
     molecule_type = models.CharField(max_length=50)
