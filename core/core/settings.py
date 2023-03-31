@@ -26,6 +26,7 @@ INSTALLED_APPS = [
 
     # local apps
     'backend.apps.BackendConfig',
+    'biomergesite.apps.BiomergesiteConfig'
 ]
 
 MIDDLEWARE = [
