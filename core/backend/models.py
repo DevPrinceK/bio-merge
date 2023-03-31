@@ -1,4 +1,13 @@
 from django.db import models
+import os
+from django.conf import settings
+
+
+class DataFile(models.Model):
+    file = models.FileField(upload_to='data_files')
+
+    def get_file_path(self):
+        return os.path.join(settings.MEDIA_ROOT, self.file.name)
 
 
 class GenBankRecord(models.Model):

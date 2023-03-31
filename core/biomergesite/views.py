@@ -1,7 +1,12 @@
 from django.shortcuts import render
 from django.views import View
 from backend.ativ.aquisition import GetData, ReadData
-from backend.models import GenBankRecord
+from backend.models import GenBankRecord, DataFile
+import os
+from django.db.models import Q
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 class IndexView(View):
@@ -10,6 +15,31 @@ class IndexView(View):
     def get(self, request, *args, **kwargs):
         context = {}
         return render(request, self.template_name, context)
+
+
+class GeneralSearch(View):
+    '''CBV for searching sequences'''
+
+    template = 'biomerge/index.html'
+
+    def get(self, request, *args, **kwargs):
+        search_term = request.GET.get('query')
+        results = GenBankRecord.objects.filter(
+            Q(accession_id__icontains=search_term) |
+            Q(organism__icontains=search_term) |
+            Q(molecule_type__icontains=search_term) |
+            Q(taxonomy__icontains=search_term) |
+            Q(references__icontains=search_term) |
+            Q(sequence_data__icontains=search_term) |
+            Q(source__icontains=search_term)
+        ).order_by('-id')
+        context = {
+            'results': results,
+            'query': search_term,
+            'total_results': results.count(),
+            'search': True,
+        }
+        return render(request, self.template, context)
 
 
 class UpdateDBSelectionView(View):
@@ -45,6 +75,11 @@ class APIResultsView(View):
         db_name = request.GET.get('db_name') or 'genbank'
         get_data = GetData()
         record = get_data.from_genbank(query)
+        data = GenBankRecord.objects.filter(accession_id=query).first()
+        results_message = {}
+        if data is not None:
+            results_message = f'Record ({record.id}) Already In Database'
+            return render(request, self.template_name, {"results_message": results_message})
         if record is not None:
             # record = record.__dict__
             molecule_type = record.annotations.get('molecule_type', '')
@@ -85,8 +120,10 @@ class FileResultsView(View):
     def get(self, request, *args, **kwargs):
         read_data = ReadData()
         fasta_file = request.GET.get('fasta_file')
+        # file_path = os.path.join(BASE_DIR, 'upload', fasta_file)
+        file = DataFile.objects.create(file=fasta_file)
 
-        records = read_data.from_fasta(fasta_file)
+        records = read_data.from_fasta(file.get_file_path())
         for seq_record in records:
             if '|' in seq_record.id:
                 accession_id = seq_record.id.split('|')[1]

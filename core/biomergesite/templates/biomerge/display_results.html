@@ -4,8 +4,7 @@
 <div class="page container">
   <div class="page-inner">
     <header class="page-title-bar">
-      <h1 class="page-title">{% if search %}Search Results For - {{query}} {% else %} Enter Query Params to Search
-        {% endif %}</h1>
+      <h1 class="page-title">Details - {{seq.accession_id}}</h1>
     </header>
     {% if search %}
     <div class="page-section">
@@ -14,7 +13,7 @@
         <div class="container card">
           <div class="container card-body ">
             <a href="">
-              <p class="card-text">#{{forloop.counter}}</p>
+              <p class="card-text">{{forloop.counter}}</p>
               <h5>{{seq.accession_id}}</h5>
               <p class="card-text">{{seq.organism}}</p>
             </a>

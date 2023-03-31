@@ -110,4 +110,8 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
+MEDIA_ROOT = BASE_DIR / 'assets/'
+MEDIA_URL = '/assets/'
+
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

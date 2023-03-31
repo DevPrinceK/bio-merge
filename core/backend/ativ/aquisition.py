@@ -35,10 +35,16 @@ class GetData():
         Entrez.email = "default@example.com"
 
         # Use the Entrez.efetch() function again to retrieve the record in GenBank format
-        handle = Entrez.efetch(
-            db="nucleotide", id=accession_id, rettype="gb", retmode="text")
-        record = SeqIO.read(handle, "genbank")
-        handle.close()
+        try:
+            handle = Entrez.efetch(
+                db="nucleotide", id=accession_id, rettype="gb", retmode="text")
+        except Exception as e:
+            print(e)
+            print('Error retrieving record from GenBank')
+            return None
+        else:
+            record = SeqIO.read(handle, "genbank")
+            handle.close()
         return record
 
     def from_pubmed(self, genbank_record):
