@@ -1,6 +1,20 @@
 from django.db import models
 
 
+class GenBankRecord(models.Model):
+    accession_id = models.CharField(max_length=100)
+    organism = models.CharField(max_length=100)
+    sequence_length = models.IntegerField()
+    molecule_type = models.CharField(max_length=50)
+    source = models.TextField()
+    taxonomy = models.TextField()
+    references = models.TextField()
+    sequence_data = models.TextField()
+
+    def __str__(self):
+        return self.accession_id
+
+
 class Gene(models.Model):
     '''schema for genes table'''
     gene_id = models.AutoField(primary_key=True, unique=True)

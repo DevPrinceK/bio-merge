@@ -41,7 +41,39 @@ class GetData():
         #     return None
 
     def from_refseq(self):
+        
         pass
 
-    def from_ncbi(self):
-        pass
+
+    def from_ncbi(query, organism="Homo sapiens", rettype="fasta", retmax=10):
+        base_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
+        db = "nucleotide"
+        term = organism + "[organism] AND RefSeq[filter] AND " + query
+
+        # construct the search URL
+        search_url = base_url + "esearch.fcgi?db=" + \
+            db + "&term=" + term + "&retmax=" + str(retmax)
+
+        # send the request and get the response
+        response = requests.get(search_url)
+
+        # extract the list of IDs from the response
+        id_list = response.json()["esearchresult"]["idlist"]
+
+        # convert the ID list to a comma-separated string
+        id_string = ",".join(id_list)
+
+        # construct the retrieval URL
+        retrieve_url = base_url + "efetch.fcgi?db=" + \
+            db + "&id=" + id_string + "&rettype=" + rettype
+
+        # send the request and get the response
+        response = requests.get(retrieve_url)
+
+        # split the response into individual FASTA sequences
+        fasta_list = response.text.split(">")[1:]
+
+        # format the FASTA sequences and return as a list
+        return [">" + fasta.strip() for fasta in fasta_list]
+
+    
