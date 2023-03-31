@@ -77,3 +77,53 @@ class APIResultsView(View):
             'results_message': results_message
         }
         return render(request, self.template_name, context)
+
+
+class FileResultsView(View):
+    template_name = 'biomerge/file_results.html'
+
+    def get(self, request, *args, **kwargs):
+        read_data = ReadData()
+        fasta_file = request.GET.get('fasta_file')
+
+        records = read_data.from_fasta(fasta_file)
+        for seq_record in records:
+            if '|' in seq_record.id:
+                accession_id = seq_record.id.split('|')[1]
+            else:
+                accession_id = seq_record.id
+
+            # get data from genank
+            record = get_data.from_genbank(accession_id)
+            if record is not None:
+                # record = record.__dict__
+                molecule_type = record.annotations.get('molecule_type', '')
+                source = record.features[0].qualifiers.get(
+                    'isolation_source', [''])[0]
+                taxonomy = '; '.join(record.annotations['taxonomy'])
+                references = '\n'.join([str(ref)
+                                        for ref in record.annotations['references']])
+                try:
+                    genbank_record = GenBankRecord(
+                        accession_id=record.id,
+                        organism=record.annotations['organism'],
+                        sequence_length=len(record.seq),
+                        molecule_type=molecule_type,
+                        source=source,
+                        taxonomy=taxonomy,
+                        references=references,
+                        sequence_data=str(record.seq)
+                    )
+                    genbank_record.save()
+                except Exception as e:
+                    print(e)
+                    print('Error saving record to database')
+                    results_message = f'Error saving record ({record.id}) to database'
+                else:
+                    print('Record saved to database')
+                    results_message = f'Record ({record.id}) saved to database'
+
+        context = {
+            'results_message': results_message,
+        }
+        return render(request, self.template_name, context)

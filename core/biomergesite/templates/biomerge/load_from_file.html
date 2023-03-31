@@ -8,9 +8,9 @@
     </header>
     <div class="page-section">
       <div class="section-block">
-        <div class="container">
-          <div class="container card">
-            <form action="" enctype="multipart/form-data">
+        <div class="container card">
+          <div class="container card-body">
+            <form action="{% url 'biomerge:file_results' %}" enctype="multipart/form-data">
               <div class="container">
                 <p class="card-text">
                   <h1>Upload Data From PC</h1>
@@ -19,7 +19,8 @@
               <div class="container">
                 <div class="col-8">
                   <div class="input-group mb-3">
-                    <input type="file" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                    <input type="file" class="form-control" name="fasta_file" id="basic-url"
+                      aria-describedby="basic-addon3">
                   </div>
                 </div>
                 <div class="col-8">
@@ -32,13 +33,10 @@
                     </select>
                   </div>
                 </div>
+                <div class="col-8">
+                  <input type="submit" class="btn btn-sm btn-primary" value="Upload Data">
+                </div>
               </div>
-              <!-- <div class="input-group mb-3">
-                <input type="file" class="form-control" id="basic-url" aria-describedby="basic-addon3">
-              </div> -->
-              <!-- <div class="input-group mb-3">
-                <input type="file" class="form-control" id="basic-url" aria-describedby="basic-addon3">
-              </div> -->
             </form>
           </div>
         </div>
