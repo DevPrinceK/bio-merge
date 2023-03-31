@@ -12,7 +12,7 @@
           <div class="container card">
             <div class="row-12 card-body text-center">
               <!-- <p>row 1</p> -->
-              <a href="">
+              <a href="{% url 'biomerge:load_data' %}?load_type=file">
                 <h1>UPLOAD DATA FROM PC</h1>
               </a>
             </div>
@@ -21,7 +21,7 @@
           <div class="container card">
             <div class="row-12 card-body text-center">
               <!-- <p>row 2</p> -->
-              <a href="">
+              <a href="{% url 'biomerge:load_data' %}?load_type=api">
                 <h1>LOAD DATA FROM API</h1>
               </a>
             </div>

@@ -1,14 +1,61 @@
 import requests
+from Bio import SeqIO, Entrez
+from Bio.PDB import PDBParser
+
+
+class ReadData():
+    '''Class for reading data from local files'''
+
+    def __init__(self):
+        pass
+
+    def from_fasta(self, fasta_file):
+        # reads data from fasta file
+        records = SeqIO.parse(fasta_file, "fasta")
+        return records
+
+    def from_pdb(self, pdb_file):
+        # reads data from pdb file
+        parser = PDBParser()
+        structure = parser.get_structure("structure", pdb_file)
+        return structure
 
 
 class GetData():
     '''
-    This class gets data from various sources 
-    and returns a dictionary of the data.
+    This class gets data from various online sources
     '''
 
     def __init__(self):
         pass
+
+    def from_genbank(self, accession_id):
+        # gets data from genbank
+        # Set the email address to use for accessing NCBI's servers
+        Entrez.email = "default@example.com"
+
+        # Use the Entrez.efetch() function again to retrieve the record in GenBank format
+        handle = Entrez.efetch(
+            db="nucleotide", id=accession_id, rettype="gb", retmode="text")
+        record = SeqIO.read(handle, "genbank")
+        handle.close()
+        return record
+
+    def from_pubmed(self, genbank_record):
+        # Set the email address to use for accessing NCBI's servers
+        Entrez.email = "default@example.com"
+
+        # Extract the PubMed IDs associated with the GenBank record
+        pubmed_ids = [
+            ref.pubmed_id for ref in genbank_record.annotations['references']]
+
+        # Use the Entrez.efetch() function to retrieve the PubMed records
+        handle = Entrez.efetch(db="pubmed", id=pubmed_ids,
+                               rettype="medline", retmode="text")
+        records = Medline.parse(handle)
+        handle.close()
+
+        return list(records)
 
     def from_uniprot(self, uniprot_id, format='fasta'):
         # gets data from uniprot - default is fasta
@@ -23,57 +70,21 @@ class GetData():
     def from_pdb(self, pdb_id):
         base = "https://data.rcsb.org/rest/v1/core/entry/"
         url = f"{base}/{pdb_id}"
-        sample_url = "https://data.rcsb.org/rest/v1/core/entry/1a0a"
-        response = requests.get(sample_url)
-        # print(response)
-        return response.json()
-        # if response.status_code == 200:
-        #     data = response.json()
-        #     return data
 
-        #     # Extract the metadata
-        #     # structure_id = data["id"]
-        #     # structure_title = data["rcsb_entry_info"]["title"]
-        #     # structure_resolution = data["rcsb_entry_info"]["resolution_combined"]
-        #     # num_atoms = data["rcsb_entry_info"]["polymer_entity_count"]["atom"]
-        # else:
-        #     print(f"Request failed with status code {response.status_code}")
-        #     return None
+        # get the data
+        response = requests.get(url)
 
-    def from_refseq(self):
-        
-        pass
+        # Check if the request was successful
+        if response.status_code == 200:
+            # Parse the response JSON data
+            data = response.json()
+            return data
 
-
-    def from_ncbi(query, organism="Homo sapiens", rettype="fasta", retmax=10):
-        base_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
-        db = "nucleotide"
-        term = organism + "[organism] AND RefSeq[filter] AND " + query
-
-        # construct the search URL
-        search_url = base_url + "esearch.fcgi?db=" + \
-            db + "&term=" + term + "&retmax=" + str(retmax)
-
-        # send the request and get the response
-        response = requests.get(search_url)
-
-        # extract the list of IDs from the response
-        id_list = response.json()["esearchresult"]["idlist"]
-
-        # convert the ID list to a comma-separated string
-        id_string = ",".join(id_list)
-
-        # construct the retrieval URL
-        retrieve_url = base_url + "efetch.fcgi?db=" + \
-            db + "&id=" + id_string + "&rettype=" + rettype
-
-        # send the request and get the response
-        response = requests.get(retrieve_url)
-
-        # split the response into individual FASTA sequences
-        fasta_list = response.text.split(">")[1:]
-
-        # format the FASTA sequences and return as a list
-        return [">" + fasta.strip() for fasta in fasta_list]
-
-    
+            # Extract the metadata
+            # structure_id = data["id"]
+            # structure_title = data["rcsb_entry_info"]["title"]
+            # structure_resolution = data["rcsb_entry_info"]["resolution_combined"]
+            # num_atoms = data["rcsb_entry_info"]["polymer_entity_count"]["atom"]
+        else:
+            print(f"Request failed with status code {response.status_code}")
+            return None
