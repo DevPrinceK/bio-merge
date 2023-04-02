@@ -6,23 +6,55 @@
     <header class="page-title-bar">
       <h1 class="page-title">Details - {{seq.accession_id}}</h1>
     </header>
-    {% if search %}
     <div class="page-section">
       <div class="section-block">
-        {% for seq in results %}
         <div class="container card">
           <div class="container card-body ">
-            <a href="">
-              <p class="card-text">{{forloop.counter}}</p>
-              <h5>{{seq.accession_id}}</h5>
-              <p class="card-text">{{seq.organism}}</p>
-            </a>
+
+            <div class="col-12">
+              <p>Accession ID</p>
+              <b>{{seq.accession_id}}</b>
+            </div>
+
+            <div class="col-12">
+              <p>Organism</p>
+              <h5>{{seq.organism}}</h5>
+            </div>
+
+            <div class="col-12">
+              <p>Sequence Length</p>
+              <h5>{{seq.sequence_length}}</h5>
+            </div>
+
+            <div class="col-12">
+              <p>Molecule Type</p>
+              <h5>{{seq.molecule_type}}</h5>
+            </div>
+
+            <div class="col-12">
+              <p>Source</p>
+              <h5>{{seq.source}}</h5>
+            </div>
+
+            <div class="col-12">
+              <p>Taxonomy</p>
+              <h5>{{seq.taxonomy}}</h5>
+            </div>
+
+            <div class="col-12">
+              <p>Sequence Data</p>
+              <h5>{{seq.sequence_data}}</h5>
+            </div>
+
+            <div class="col-12">
+              <p>References</p>
+              <h5>{{seq.references}}</h5>
+            </div>
+
           </div>
         </div>
-        {% endfor %}
       </div>
     </div>
-    {% endif %}
   </div>
 </div>
 {% endblock %}

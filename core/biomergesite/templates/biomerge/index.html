@@ -13,7 +13,7 @@
         {% for seq in results %}
         <div class="container card">
           <div class="container card-body ">
-            <a href="">
+            <a href="{% url 'biomerge:about_seq' %}?accession_id={{seq.accession_id}}">
               <p class="card-text">#{{forloop.counter}}</p>
               <h5>{{seq.accession_id}}</h5>
               <p class="card-text">{{seq.organism}}</p>

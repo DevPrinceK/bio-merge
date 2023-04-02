@@ -164,3 +164,15 @@ class FileResultsView(View):
             'results_message': results_message,
         }
         return render(request, self.template_name, context)
+
+
+class DisplaySequenceView(View):
+    template_name = 'biomerge/display_results.html'
+
+    def get(self, request, *args, **kwargs):
+        accession_id = request.GET.get('accession_id')
+        seq = GenBankRecord.objects.filter(accession_id=accession_id).first()
+        context = {
+            'seq':seq,
+        }
+        return render(request, self.template_name, context)

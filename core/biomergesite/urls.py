@@ -9,4 +9,5 @@ urlpatterns = [
     path('api-results', APIResultsView.as_view(), name='api_results'),
     path('file-results', FileResultsView.as_view(), name='file_results'),
     path('general-search', GeneralSearch.as_view(), name='general_search'),
+    path('about-seq', DisplaySequenceView.as_view(), name='about_seq'),
 ]
